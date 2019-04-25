@@ -19,9 +19,16 @@ void PrintStartMenu();
 void ClientGameLoop();
 void ServerGameLoop();
 void CloseSockets();
+void HelpMenu();
 void Exit();
 
 void RenderingThread(sf::RenderWindow * window);
+
+void TestCase1();
+void TestCase2();
+void TestCase3();
+void TestCase4();
+void TestCase5();
 
 int main(void)
 {
@@ -79,7 +86,7 @@ int GetUserInput(int lower, int upper)
 void Start()
 {
 	PrintStartMenu();
-	int user_menu_selection = GetUserInput(1, 3);
+	int user_menu_selection = GetUserInput(1, 4);
 	std::string str;
 	std::string ip;
 	switch (user_menu_selection)
@@ -107,6 +114,16 @@ void Start()
 		SetConsoleTitle(str.c_str());
 		is_server = false;
 		break;
+	case(4):
+		HelpMenu();
+		Start();
+		break;
+	case(5):
+		TestCase1();
+		TestCase2();
+		TestCase3();
+		TestCase4();
+		TestCase5();
 	default:
 		break;
 	}
@@ -117,7 +134,9 @@ void PrintStartMenu()
 	std::cout << std::endl;
 	std::cout << "\t" << "[1]" << "\t" << "Start game" << std::endl;
 	std::cout << "\t" << "[2]" << "\t" << "Join game" << std::endl;
-	std::cout << "\t" << "[3]" << "\t" << "Direct IP" << std::endl << std::endl;
+	std::cout << "\t" << "[3]" << "\t" << "Direct IP" << std::endl;
+	std::cout << "\t" << "[4]" << "\t" << "Help" << std::endl;
+	std::cout << "\t" << "[5]" << "\t" << "Run test cases" << std::endl << std::endl;
 }
 void ClientGameLoop()
 {
@@ -242,6 +261,21 @@ void CloseSockets()
 		client.CloseSocket();
 	}
 }
+void HelpMenu()
+{
+
+	system("CLS");
+	std::cout << std::endl;
+	std::cout << "\t> " << "Place a token in column 'n' (1-7) when it is your turn by typing [n] and then hitting [Enter]." << std::endl;
+	std::cout << "\t> " << "You must enter commands into the console window only. Trying it in the graphical window won't do anything." << std::endl;
+	std::cout << "\t> " << "You must have one player Start a game first before another tries to Join." << std::endl;
+	std::cout << "\t> " << "When using Direct IP to join a game, enter the server's IPv4 address. No ports are needed." << std::endl;
+	std::cout << "\t> " << "You will not be able to connect to players on different networks." << std::endl << std::endl;
+	std::cout << "\t" << "[1]" << "\t" << "Exit help menu" << std::endl << std::endl;
+	int a = 0;
+	std::cin >> a;
+	system("CLS");
+}
 void Exit()
 {
 	std::cout << std::endl << "\tPress [Enter] to exit. ";
@@ -318,4 +352,37 @@ void RenderingThread(sf::RenderWindow * window)
 		// end the current frame
 		window->display();
 	}
+}
+
+void TestCase1()
+{
+	// Connection
+	client.Connect();
+	server.Connect();
+}
+void TestCase2()
+{
+	// Close Sockets
+	CloseSockets();
+}
+void TestCase3()
+{
+	// Print Start Menu a million times
+	for (int i = 0; i < 1000000; i++)
+	{
+		PrintStartMenu();
+	}
+}
+void TestCase4()
+{
+	// Print Help Menu a million times
+	for (int i = 0; i < 1000000; i++)
+	{
+		HelpMenu();
+	}
+}
+void TestCase5()
+{
+	// Weird Input Bounds
+	GetUserInput(1, -1);
 }
