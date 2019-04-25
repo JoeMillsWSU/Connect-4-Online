@@ -4,13 +4,9 @@
 Player::Player() { }
 Player::~Player() { }
 
-void Player::Connect()
-{
-}
+void Player::Connect() { }
 
-void Player::CloseSocket()
-{
-}
+void Player::CloseSocket() { }
 
 int Player::RecieveMove()
 {

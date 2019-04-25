@@ -9,6 +9,7 @@ public:
 	~Client();
 	SOCKET GetServer();
 	void Connect();
+	void Connect(std::string target_ip_address);
 private:
 	SOCKADDR_IN addr;
 };

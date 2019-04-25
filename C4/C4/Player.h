@@ -18,6 +18,6 @@ public:
 	int MakeMove(int column_selection);
 protected:
 	WSADATA WSAData;
-	 SOCKET server;
+	SOCKET server;
 };
 

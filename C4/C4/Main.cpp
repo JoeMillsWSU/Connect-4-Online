@@ -1,4 +1,3 @@
-
 #include <SFML\Graphics.hpp>
 #include <stdio.h>
 #include <iostream>
@@ -19,7 +18,6 @@ void Start();
 void PrintStartMenu();
 void ClientGameLoop();
 void ServerGameLoop();
-void DrawBoard(Board board);
 void CloseSockets();
 void Exit();
 
@@ -81,8 +79,9 @@ int GetUserInput(int lower, int upper)
 void Start()
 {
 	PrintStartMenu();
-	int user_menu_selection = GetUserInput(1, 2);
+	int user_menu_selection = GetUserInput(1, 3);
 	std::string str;
+	std::string ip;
 	switch (user_menu_selection)
 	{
 	case(1):
@@ -99,6 +98,15 @@ void Start()
 		SetConsoleTitle(str.c_str());
 		is_server = false;
 		break;
+	case(3):
+		client = Client();
+		std::cout << std::endl << "\tEnter IP: ";
+		std::cin >> ip;
+		client.Connect(ip);
+		str = ("Connect 4 - Client");
+		SetConsoleTitle(str.c_str());
+		is_server = false;
+		break;
 	default:
 		break;
 	}
@@ -108,7 +116,8 @@ void PrintStartMenu()
 	system("CLS");
 	std::cout << std::endl;
 	std::cout << "\t" << "[1]" << "\t" << "Start game" << std::endl;
-	std::cout << "\t" << "[2]" << "\t" << "Join game" << std::endl << std::endl;
+	std::cout << "\t" << "[2]" << "\t" << "Join game" << std::endl;
+	std::cout << "\t" << "[3]" << "\t" << "Direct IP" << std::endl << std::endl;
 }
 void ClientGameLoop()
 {
@@ -222,48 +231,6 @@ void ServerGameLoop()
 	system("CLS");
 	board.PrintBoard();
 }
-void DrawBoard(Board board)
-{
-	/*
-	sf::RectangleShape grid[7][6];
-
-	window.clear();
-	sf::Vector2f cellSize(100.0f, 100.0f);
-	// drawing grid?
-	for (int i = 0; i < BOARD_COLUMNS; i++) 
-	{
-		for (int j = 0; j < BOARD_ROWS; j++) 
-		{
-			grid[i][j].setSize(cellSize);
-			grid[i][j].setOutlineColor(sf::Color::Blue);
-			grid[i][j].setOutlineThickness(5.0f);
-
-			grid[i][j].setPosition(i*cellSize.x + 5.0f, j*cellSize.y + 5.0f);
-
-			window.draw(grid[i][j]);
-		}
-	}
-	sf::CircleShape token_graphic_objects[BOARD_ROWS][BOARD_COLUMNS];
-	// drawing tokens
-	for (int row = 0; row < BOARD_ROWS; row++)
-	{
-		for (int col = 0; col < BOARD_COLUMNS; col++)
-		{
-			if (board.board[row][col].token_state == 1)
-			{
-				token_graphic_objects[row][col].setFillColor(sf::Color::Red);
-			}
-			else if (board.board[row][col].token_state == 2)
-			{
-				token_graphic_objects[row][col].setFillColor(sf::Color::Blue);
-			}
-			token_graphic_objects[row][col].setPosition(col * 100, window.getSize().y - (row * 100));
-			window.draw(token_graphic_objects[row][col]);
-		}
-	}
-	window.display();
-	*/
-}
 void CloseSockets()
 {
 	if (is_server)
@@ -289,7 +256,6 @@ void RenderingThread(sf::RenderWindow * window)
 	float cell_width = 50.f;
 	float token_offset = (cell_thiccness/2) + ((cell_width - token_width) / 1);
 
-	//sf::RenderWindow window(sf::VideoMode(750, 650), "Connect 4");
 	sf::RectangleShape grid[7][6];
 	sf::CircleShape token_graphic_objects[BOARD_ROWS][BOARD_COLUMNS];
 
@@ -306,8 +272,7 @@ void RenderingThread(sf::RenderWindow * window)
 	// the rendering loop
 	while (window->isOpen())
 	{
-		// draw...
-
+		// draw grid
 		window->clear();
 		sf::Vector2f cellSize(100.0f, 100.0f);
 
@@ -319,27 +284,12 @@ void RenderingThread(sf::RenderWindow * window)
 				grid[i][j].setOutlineColor(sf::Color::White);
 				grid[i][j].setFillColor(sf::Color::Transparent);
 				grid[i][j].setOutlineThickness(cell_thiccness);
-
 				grid[i][j].setPosition(i*cellSize.x + (cell_thiccness /2), j*cellSize.y + (cell_thiccness /2));
 
 				window->draw(grid[i][j]);
 			}
 		}
-
-		// tried to make it where the user can input a spot and have the token appear there. Not working? 
-		int counter1 = 0, yCoord1 = 500;
-		bool draw = false;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && counter1 < 6) // column 1
-		{
-			draw = true;
-			if (draw) {
-				//shape.setPosition(0, yCoord1);
-				//window->draw(shape);
-				counter1++;
-				yCoord1 - 100;
-			}
-		}
-
+		
 		// drawing tokens
 		for (int row = 0; row < BOARD_ROWS; row++)
 		{
